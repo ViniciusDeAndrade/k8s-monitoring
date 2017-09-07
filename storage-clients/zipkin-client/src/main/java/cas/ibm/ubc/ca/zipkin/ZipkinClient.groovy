@@ -64,4 +64,26 @@ public class ZipkinClient {
 ////		println mapTraces
 //									 
 	}
+
+	private ZipkinRequestor requestor;
+
+	public ZipkinClient(host, port) {
+		requestor = new ZipkinRequestor(host, port, 10,	TimeUnit.SECONDS)
+	}
+
+	public getMessages(serviceName, period) {
+		def tracesList = requestor.getTraces(serviceName: serviceName,
+											 limit: 1000,
+											 annotationQuery: 'cs')
+		println 'TraceList size (# of traces): ' + tracesList.size()
+
+		tracesList.each { trace ->
+			println 'Trace size (# of spans): ' + trace.size()
+			trace.each { span ->
+				span.annotations.each { annotation ->
+					println annotation
+				}
+			}
+		}
+	}
 }
